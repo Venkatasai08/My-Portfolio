@@ -1,48 +1,53 @@
-import 'package:portfolio/constants/supabaseConstants.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:portfolio/constants/constants.dart';
 import 'package:portfolio/models/browserDataModel.dart';
 import 'package:portfolio/models/headerModel.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:portfolio/models/serviceModel.dart';
+import 'package:portfolio/models/userDetails.dart';
+
+final FirebaseFirestore firestore = FirebaseFirestore.instance;
+DocumentReference get docRef =>
+    firestore.collection(Constants().portfolio).doc(Constants().portfolio);
 
 class DashboardApi {
-  final supabase = Supabase.instance.client;
-  final SupabaseConsts sbconsts = SupabaseConsts();
+  final Constants consts = Constants();
 
   int countId = 1;
   Stream<List<BrowserDataModel>> getDevicesAllViewedCount() {
-    return supabase
-        .from(sbconsts.viewedDevices)
-        .select()
-        .asStream()
-        .map((event) => event.map((e) => BrowserDataModel.fromMap(e)).toList());
+    // return supabase
+    //     .from(consts.viewedDevices)
+    //     .select()
+    //     .asStream()
+    //     .map((event) => event.map((e) => BrowserDataModel.fromMap(e)).toList());
+
+    return docRef.collection(consts.viewedDevices).snapshots().map((event) =>
+        event.docs.map((e) => BrowserDataModel.fromMap(e.data())).toList());
   }
 
   Future<ResponseModel> saveDeviceInfo(BrowserDataModel data) async {
     try {
-      await supabase.from(sbconsts.viewedDevices).insert(data.toMap());
+      await docRef.collection(consts.viewedDevices).add(data.toMap());
       return ResponseModel(isSuccess: true, message: "Success");
     } catch (e) {
       return ResponseModel(isSuccess: false, message: e.toString());
     }
   }
 
-  Stream<int> getPortfolioViewCount() {
-    return supabase
-        .from(sbconsts.portfolioViewCount)
-        .stream(primaryKey: ["id"]).map((event) => event[0][sbconsts.count]);
+  Stream<UserDetailsModel> getPortfolioViewCount() {
+    return docRef.snapshots().map((event) {
+      debugPrint(event.data().toString());
+      return UserDetailsModel.fromMap(event.data() as Map<String, dynamic>);
+    });
   }
 
   Future<ResponseModel> updateCount() async {
     try {
-      List<Map> data = await supabase
-          .from(sbconsts.portfolioViewCount)
-          .select()
-          .match({"id": countId});
-      int count = data[0][sbconsts.count];
+      DocumentSnapshot data = await docRef.get();
+      int count = data[consts.count];
       count = count + 1;
-      await supabase.from(sbconsts.portfolioViewCount).update(
-        {sbconsts.count: count},
-      ).match(
-        {"id": 1},
+      await docRef.update(
+        {consts.count: count},
       );
       return ResponseModel(isSuccess: true, message: "Success");
     } catch (e) {

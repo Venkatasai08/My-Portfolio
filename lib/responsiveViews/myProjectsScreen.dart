@@ -41,7 +41,7 @@ class MyProjectsScreen extends StatelessWidget {
           const ProjectsGridWidget(crossAxisCount: 3),
         ],
       ),
-      paddingWidth: size.width * 0.1,
+      paddingWidth: 20,
       bgColor: AppColors.bgColor2,
     );
   }

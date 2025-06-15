@@ -48,16 +48,18 @@ class SkillsAndExperience extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Expanded(
+                flex: 3,
                 child: Padding(
-                  padding: EdgeInsets.only(left: 80, right: 50),
+                  padding: EdgeInsets.only(left: 50, right: 50),
                   child: SkillsGridView(),
                 ),
               ),
               Expanded(
+                flex: 2,
                 child: Align(
                   alignment: Alignment.topCenter,
                   child: Padding(
-                    padding: EdgeInsets.only(right: 180),
+                    padding: EdgeInsets.only(right: 30),
                     child: ExperienceWidget(),
                   ),
                 ),
@@ -94,7 +96,7 @@ class SkillsAndExperience extends StatelessWidget {
         ],
       ),
       bgColor: AppColors.bgColor,
-      paddingWidth: 2,
+      paddingWidth: 0,
     );
   }
 }

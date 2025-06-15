@@ -3,20 +3,20 @@
 enum SkillEnum { beginner, intermediate, advanced }
 
 class SkillModel {
-  final int id;
+  final int sortOrder;
   final String skill;
   final String skillImage;
   final SkillEnum skillLevel;
 
   SkillModel(
-      {required this.id,
+      {required this.sortOrder,
       required this.skill,
       required this.skillImage,
       required this.skillLevel});
 
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
-      'id': id,
+      'sortOrder': sortOrder,
       'skill': skill,
       'skillImage': skillImage,
       'skillLevel': skillEnumToIntConverter(skillLevel),
@@ -25,7 +25,7 @@ class SkillModel {
 
   factory SkillModel.fromJson(Map<String, dynamic> map) {
     return SkillModel(
-        id: map['id'] as int,
+        sortOrder: map['sortOrder'] as int,
         skill: map['skill'] as String,
         skillImage: map['skillImage'] as String,
         skillLevel: intToSkillEnumConverter(map['skillLevel'] as int));

@@ -19,7 +19,7 @@ class ContactUsScreen extends StatelessWidget {
     final ContactUsProvider contactUsProvider = context.read();
     Widget sendButton() {
       return Padding(
-        padding: const EdgeInsets.all(15.0),
+        padding: const EdgeInsets.all(10.0),
         child: GestureDetector(
           onTap: () {
             contactUsProvider.sendTheAdvice();
@@ -69,23 +69,24 @@ class ContactUsScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          const SizedBox(
-            height: 20,
-          ),
           buildContactText(),
-          Constants.sizedBox(height: 40.0),
+          Constants.sizedBox(height: 20.0),
           Row(
             children: [
               Expanded(
-                child: ContactTextFeild(
-                  hintText: "Full Name",
-                  controller: contactUsProvider.nameController,
+                child: SlideInLeft(
+                  child: ContactTextFeild(
+                    hintText: "Full Name",
+                    controller: contactUsProvider.nameController,
+                  ),
                 ),
               ),
               Expanded(
-                child: ContactTextFeild(
-                  hintText: "Email",
-                  controller: contactUsProvider.emailController,
+                child: SlideInRight(
+                  child: ContactTextFeild(
+                    hintText: "Email",
+                    controller: contactUsProvider.emailController,
+                  ),
                 ),
               ),
             ],
@@ -93,25 +94,31 @@ class ContactUsScreen extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: ContactTextFeild(
-                  hintText: "Mobile number",
-                  controller: contactUsProvider.phoneController,
+                child: SlideInLeft(
+                  child: ContactTextFeild(
+                    hintText: "Mobile number",
+                    controller: contactUsProvider.phoneController,
+                  ),
                 ),
               ),
               Expanded(
-                child: ContactTextFeild(
-                  hintText: "Subject",
-                  controller: contactUsProvider.subjectController,
+                child: SlideInRight(
+                  child: ContactTextFeild(
+                    hintText: "Subject",
+                    controller: contactUsProvider.subjectController,
+                  ),
                 ),
               ),
             ],
           ),
-          ContactTextFeild(
-            hintText: "Description",
-            controller: contactUsProvider.descriptionController,
-            maxLines: 8,
+          SlideInUp(
+            child: ContactTextFeild(
+              hintText: "Description",
+              controller: contactUsProvider.descriptionController,
+              maxLines: 8,
+            ),
           ),
-          sendButton()
+          SlideInUp(child: sendButton())
         ],
       );
     }
@@ -128,28 +135,38 @@ class ContactUsScreen extends StatelessWidget {
             ),
             buildContactText(),
             Constants.sizedBox(height: 40.0),
-            ContactTextFeild(
-              hintText: "Full Name",
-              controller: contactUsProvider.nameController,
+            SlideInLeft(
+              child: ContactTextFeild(
+                hintText: "Full Name",
+                controller: contactUsProvider.nameController,
+              ),
             ),
-            ContactTextFeild(
-              hintText: "Email",
-              controller: contactUsProvider.emailController,
+            SlideInRight(
+              child: ContactTextFeild(
+                hintText: "Email",
+                controller: contactUsProvider.emailController,
+              ),
             ),
-            ContactTextFeild(
-              hintText: "Mobile number",
-              controller: contactUsProvider.phoneController,
+            SlideInLeft(
+              child: ContactTextFeild(
+                hintText: "Mobile number",
+                controller: contactUsProvider.phoneController,
+              ),
             ),
-            ContactTextFeild(
-              hintText: "Subject",
-              controller: contactUsProvider.subjectController,
+            SlideInRight(
+              child: ContactTextFeild(
+                hintText: "Subject",
+                controller: contactUsProvider.subjectController,
+              ),
             ),
-            ContactTextFeild(
-              hintText: "Description",
-              controller: contactUsProvider.descriptionController,
-              maxLines: 8,
+            SlideInUp(
+              child: ContactTextFeild(
+                hintText: "Description",
+                controller: contactUsProvider.descriptionController,
+                maxLines: 8,
+              ),
             ),
-            sendButton()
+            SlideInDown(child: sendButton())
           ],
         ),
         tablet: buildForm(),

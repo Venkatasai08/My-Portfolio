@@ -26,41 +26,37 @@ class HelperClass extends StatelessWidget {
       width: size.width,
       alignment: Alignment.center,
       color: bgColor,
-      child: StackMediaIcons(
-        isIconsVisible: shouldIconsVisible,
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            if (constraints.maxWidth < Utils.mobileMaxWidth) {
-              return Container(
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          if (constraints.maxWidth < Utils.mobileMaxWidth) {
+            return Container(
+              // height: size.height,
+              width: size.width,
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+              child: mobile,
+            );
+          } else if (constraints.maxWidth < 1200) {
+            return Container(
+              // height: size.height,
+              width: size.width,
+
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+              child: tablet,
+            );
+          } else {
+            return ConstrainedBox(
+              constraints: BoxConstraints(minHeight: size.height),
+              child: Container(
                 // height: size.height,
+                width: size.width,
 
-                padding: EdgeInsets.symmetric(
-                    vertical: size.height * 0.05, horizontal: 18),
-                child: mobile,
-              );
-            } else if (constraints.maxWidth < 1200) {
-              return Container(
-                // height: size.height,
-
-                padding: EdgeInsets.symmetric(
-                    vertical: size.height * 0.1, horizontal: paddingWidth),
-                child: tablet,
-              );
-            } else {
-              return ConstrainedBox(
-                constraints: BoxConstraints(minHeight: size.height),
-                child: Container(
-                  // height: size.height,
-
-                  padding: EdgeInsets.symmetric(
-                      vertical: size.height * 0.1,
-                      horizontal: paddingWidth + 50),
-                  child: desktop,
-                ),
-              );
-            }
-          },
-        ),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 50),
+                child: desktop,
+              ),
+            );
+          }
+        },
       ),
     );
   }

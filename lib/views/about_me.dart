@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:portfolio/globals/app_assets.dart';
 import 'package:portfolio/globals/app_colors.dart';
 import 'package:portfolio/globals/constants.dart';
-import 'package:portfolio/helper%20class/helper_class.dart';
+import 'package:portfolio/provider/dashboardProvider.dart';
+import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
 import '../globals/app_buttons.dart';
 import '../globals/app_text_styles.dart';
@@ -17,14 +19,31 @@ class AboutMeContentWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final DashboardProvider dashboardProvider = context.read();
     Future<void> launchPDF() async {
       // Load the PDF file from assets
-      final bytes = await rootBundle.load(AppAssets.resume);
+      var bytes = await rootBundle.load(AppAssets.resume);
       final blob = html.Blob([bytes.buffer.asUint8List()], 'application/pdf');
       final url = html.Url.createObjectUrlFromBlob(blob);
 
       // Open the PDF file in a new tab
       html.window.open(url, '_blank');
+    }
+
+    void downloadPDF(String downloadUrl) async {
+      var response = await http.get(Uri.parse(downloadUrl));
+      if (response.statusCode == 200) {
+        final blob = html.Blob([response.bodyBytes], 'application/pdf');
+        final url = html.Url.createObjectUrlFromBlob(blob);
+        // final anchor = html.AnchorElement(href: url)
+        //   ..setAttribute("download", "sample.pdf")
+        //   ..click();
+        // html.Url.revokeObjectUrl(url);
+        html.window.open(url, '_blank');
+      } else {
+        // Handle errors
+        print('Failed to download PDF: ${response.statusCode}');
+      }
     }
 
     return Column(
@@ -46,7 +65,12 @@ class AboutMeContentWidget extends StatelessWidget {
           duration: const Duration(milliseconds: 1800),
           child: AppButtons.buildMaterialButton(
               onTap: () {
-                launchPDF();
+                String downloadUrl = dashboardProvider.userDetailsModel.resume;
+                if (downloadUrl.isEmpty) {
+                  launchPDF();
+                } else {
+                  downloadPDF(downloadUrl);
+                }
               },
               buttonName: 'Download CV'),
         )
@@ -64,13 +88,17 @@ class ProfilePictureWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FadeInRight(
+    return SlideInLeft(
       duration: const Duration(milliseconds: 1200),
-      child: Image.network(
-        "https://firebasestorage.googleapis.com/v0/b/mychat-bc5a1.appspot.com/o/mediaUploads%2F1709990910327%23Picsart_24-03-09_18-58-15-776.png?alt=media&token=c1015f17-3b6a-469c-8573-0f25109eb9e7",
-        height: size,
-        width: size,
-      ),
+      child: Consumer<DashboardProvider>(builder: (context, value, child) {
+        return Image.network(
+          value.userDetailsModel.secondProfilePic.isEmpty
+              ? "https://res.cloudinary.com/dytmxozk2/image/upload/v1749725237/secondImage_iem9wj.png"
+              : value.userDetailsModel.secondProfilePic,
+          height: size,
+          width: size,
+        );
+      }),
     );
   }
 }
@@ -106,7 +134,7 @@ class AboutMeWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        FadeInRight(
+        FadeInDown(
           duration: const Duration(milliseconds: 1200),
           child: RichText(
             text: TextSpan(
@@ -131,11 +159,13 @@ class AboutMeWidget extends StatelessWidget {
           ),
         ),
         Constants.sizedBox(height: 8.0),
-        Text(
-          '         Well qualified Full Stack Developer familiar with wide range of programming utilities and languages. '
-          'Knowledge of backend and frontend development requirements.Handle any part of process with ease.'
-          'Collaborative team player with excellent technical abilities offering $experienceText of related experience.\n',
-          style: AppTextStyles.normalStyle(),
+        FadeInRight(
+          child: Text(
+            '         Well qualified Full Stack Developer familiar with wide range of programming utilities and languages. '
+            'Knowledge of backend and frontend development requirements.Handle any part of process with ease.'
+            'Collaborative team player with excellent technical abilities offering $experienceText of related experience.\n',
+            style: AppTextStyles.normalStyle(),
+          ),
         ),
       ],
     );

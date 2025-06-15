@@ -9,6 +9,8 @@ class AppAssets {
       'https://cdn.iconscout.com/icon/free/png-512/free-instagram-63-189784.png?f=webp&w=256';
   static String twitter =
       'https://cdn.iconscout.com/icon/premium/png-512-thumb/twitter-2749369-2284759.png?f=webp&w=256';
+  static String mail =
+      "https://cdn.pixabay.com/photo/2014/03/25/16/55/email-297633_1280.png";
   static String profile1 = 'assets/images/pro1.png';
   static String profile2 = 'assets/images/pro2.png';
   static String code = 'assets/images/coding.png';
@@ -41,4 +43,5 @@ class AppAssets {
   static String twitterLink = "https://twitter.com/Venkatasai08/";
   static String linkedInLInk =
       "https://www.linkedin.com/in/venkatasai-vishwanath-937600213/";
+  static String mailLink = "vishwanathvenkatasai08@gmail.com";
 }

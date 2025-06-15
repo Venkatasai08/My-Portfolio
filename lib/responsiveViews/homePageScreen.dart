@@ -32,9 +32,12 @@ class HomePageScreen extends StatelessWidget {
       mobile: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const SizedBox(
+            height: 35,
+          ),
           ItsMeWidget(),
           const ProfileAnimation(),
-          Constants.sizedBox(height: 45.0),
+          Constants.sizedBox(height: 35.0),
           const HomePageContentWidget(),
         ],
       ),
@@ -55,7 +58,7 @@ class HomePageScreen extends StatelessWidget {
       ),
       desktop: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
               child: Column(
@@ -68,8 +71,8 @@ class HomePageScreen extends StatelessWidget {
           const ProfileAnimation(),
         ],
       ),
-      paddingWidth: size.width * 0.05,
-      bgColor: Colors.transparent,
+      paddingWidth: 5,
+      bgColor: AppColors.bgColor,
     );
   }
 }

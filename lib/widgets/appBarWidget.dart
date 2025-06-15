@@ -1,131 +1,102 @@
 import 'package:flutter/material.dart';
+import 'package:portfolio/constants/appKeys.dart';
 import 'package:portfolio/globals/app_colors.dart';
-import 'package:portfolio/globals/app_text_styles.dart';
-import 'package:portfolio/globals/constants.dart';
+
+import 'package:portfolio/globals/utils.dart';
 import 'package:portfolio/models/headerModel.dart';
 import 'package:portfolio/provider/dashboardProvider.dart';
+import 'package:portfolio/widgets/medialIconsListView.dart';
+
 import 'package:portfolio/widgets/portfolioviewCount.dart';
 import 'package:provider/provider.dart';
 
-class AppBarWidget extends StatelessWidget {
-  const AppBarWidget({super.key});
+class SideBarWidget extends StatelessWidget {
+  const SideBarWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
 
-    return AppBar(
-      backgroundColor: AppColors.bgColor,
-      toolbarHeight: 90,
-      // titleSpacing: 40,
-      elevation: 0,
-      bottom: size.width >= 700
-          ? null
-          : PreferredSize(
-              preferredSize: Size(size.width, 156),
-              child: const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  PortfolioViewCountWidget(),
-                  Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: HeaderIconsListView(
-                      isMobile: true,
-                    ),
-                  ),
-                ],
-              ),
+    return Consumer<DashboardProvider>(builder: (context, value, ch) {
+      return Material(
+        color: value.selectedIndex % 2 == 0
+            ? AppColors.bgColor
+            : AppColors.bgColor2,
+        elevation: 20,
+        child: const Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            PortfolioViewCountWidget(),
+            HeaderIconsListView(),
+            IconsListViewWidget(
+              axis: Axis.vertical,
             ),
-      title: size.width >= 700 ? const PortfolioViewCountWidget() : null,
-      actions: [
-        size.width >= 700
-            ? const HeaderIconsListView(
-                isMobile: false,
-              )
-            : const SizedBox(),
-        const SizedBox(
-          width: 20,
-        )
-      ],
-    );
+          ],
+        ),
+      );
+    });
   }
 }
 
 class HeaderIconsListView extends StatelessWidget {
-  final bool isMobile;
-  const HeaderIconsListView({super.key, required this.isMobile});
+  const HeaderIconsListView({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     final DashboardProvider dashboardProvider = context.read();
-    final onMenuHover = Matrix4.identity()..scale(1.05);
     final size = MediaQuery.of(context).size;
 
-    return SingleChildScrollView(
+    return ListView.separated(
       primary: true,
-      child: SizedBox(
-        height: 30,
-        child: ListView.separated(
-          primary: false,
-          itemCount: dashboardProvider.menuItems.length,
-          shrinkWrap: true,
-          scrollDirection: Axis.horizontal,
-          separatorBuilder: (context, child) => Constants.sizedBox(width: 8),
-          itemBuilder: (context, index) {
-            return InkWell(
-              onTap: () {
-                dashboardProvider.scrollTo(
-                    index: dashboardProvider.menuItems[index].index);
-              },
-              borderRadius: BorderRadius.circular(100),
-              onHover: (value) {
-                dashboardProvider.changeMenuItemOnHover(value, index);
-              },
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 5),
-                child: Consumer<DashboardProvider>(
-                  builder: (context, value, child) {
-                    bool hover = value.menuIndex == index;
-                    HeaderModel data = dashboardProvider.menuItems[index];
-                    return AnimatedContainer(
-                      alignment: Alignment.center,
-                      duration: const Duration(milliseconds: 200),
-                      transform: hover ? onMenuHover : null,
-                      child: Row(
-                        children: [
-                          isMobile
-                              ? iconsMethod(data, hover)
-                              : hover
-                                  ? iconsMethod(data, hover)
-                                  : const SizedBox(),
-                          isMobile
-                              ? const SizedBox()
-                              : Text(
-                                  data.name,
-                                  style: AppTextStyles.headerTextStyle(
-                                      color: hover
-                                          ? AppColors.themeColor
-                                          : AppColors.white),
-                                ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              ),
-            );
-          },
-        ),
+      itemCount: dashboardProvider.menuItems.length,
+      shrinkWrap: true,
+      scrollDirection: Axis.vertical,
+      separatorBuilder: (context, child) => const SizedBox(
+        height: 10,
       ),
+      itemBuilder: (context, index) {
+        return InkWell(
+          onTap: () {
+            // if (size.width < Utils.mobileMaxWidth) {
+            //   scaffoldKeyForDashboard.currentState?.closeEndDrawer();
+            // }
+            // dashboardProvider.scrollTo(
+            //     index: dashboardProvider.menuItems[index].index);
+            dashboardProvider.changeSelectedIndex(index);
+          },
+          borderRadius: BorderRadius.circular(100),
+          onHover: (value) {
+            if (!(size.width < Utils.mobileMaxWidth)) {
+              dashboardProvider.changeMenuItemOnHover(value, index);
+            }
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 5),
+            child: Consumer<DashboardProvider>(
+              builder: (context, value, child) {
+                bool selectedIndex = value.selectedIndex == index;
+                HeaderModel data = dashboardProvider.menuItems[index];
+                return AnimatedContainer(
+                  alignment: Alignment.center,
+                  duration: const Duration(milliseconds: 200),
+                  child: iconsMethod(data, selectedIndex),
+                );
+              },
+            ),
+          ),
+        );
+      },
     );
   }
 
   Padding iconsMethod(HeaderModel data, bool hover) {
     return Padding(
-      padding: const EdgeInsets.only(right: 10, left: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Icon(
         data.iconData,
-        size: 20,
+        size: 30,
         color: hover ? AppColors.themeColor : AppColors.white,
       ),
     );

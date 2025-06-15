@@ -11,44 +11,23 @@ class PortfolioViewCountWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
-    DashboardProvider dashboardProvider = context.read();
-
     return Padding(
-      padding: EdgeInsets.only(
-          top: size.width < Utils.mobileMaxWidth ? 10 : 0, left: 20),
-      child: Row(
-        children: [
-          Tooltip(
-            message: "Portfolio view count",
-            child:
-                Consumer<DashboardProvider>(builder: (context, value, child) {
-              return Text(
+      padding: const EdgeInsets.only(top: 10),
+      child: Tooltip(
+        message: "Portfolio view count",
+        child: Container(
+          padding: const EdgeInsets.all(6),
+          decoration: BoxDecoration(
+              border: Border.all(color: Colors.white), shape: BoxShape.circle),
+          child: Consumer<DashboardProvider>(builder: (context, value, child) {
+            return FittedBox(
+              child: Text(
                   Utils.convertToKandM(
-                      count: value.viewedCount, decimalPoints: 0),
-                  style: const TextStyle(color: Colors.white, fontSize: 18));
-            }),
-          ),
-          const SizedBox(
-            width: 20,
-          ),
-          GestureDetector(
-            onTap: () {
-              dashboardProvider.scrollTo(index: 0);
-            },
-            child: Text(
-              'VENKATA SAI ',
-              style: GoogleFonts.dancingScript(color: Colors.white),
-            ),
-          ),
-
-          // size.width < 789
-          //     ? const SizedBox()
-          //     : Text(
-          //         "Viewed",
-          //         style: AppTextStyles.headerTextStyle(color: AppColors.white),
-          //       )
-        ],
+                      count: value.userDetailsModel.count, decimalPoints: 0),
+                  style: const TextStyle(color: Colors.white, fontSize: 18)),
+            );
+          }),
+        ),
       ),
     );
   }

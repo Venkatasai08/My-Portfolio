@@ -1,15 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:portfolio/models/headerModel.dart';
+import 'package:portfolio/models/serviceModel.dart';
+import 'package:portfolio/models/userDetails.dart';
 import 'package:portfolio/responsiveViews/aboutMeScreen.dart';
 import 'package:portfolio/responsiveViews/contactUsScreen.dart';
 import 'package:portfolio/responsiveViews/homePageScreen.dart';
 import 'package:portfolio/responsiveViews/myProjectsScreen.dart';
 import 'package:portfolio/responsiveViews/myServicesScreen.dart';
 import 'package:portfolio/responsiveViews/mySkills&ExpScreen.dart';
+import 'package:portfolio/supabaseServices/dashboardService.dart';
 import 'package:portfolio/views/contact_us_textfeild.dart';
 import 'package:portfolio/views/my_services.dart';
 
 class DashboardProvider extends ChangeNotifier {
+  DashboardApi dashboardApi = DashboardApi();
+  int selectedIndex = 0;
+  bool isSidebarOpen = true;
+  changeIsSidebarOpen() {
+    isSidebarOpen = !isSidebarOpen;
+    notifyListeners();
+  }
+
+  changeSelectedIndex(int index) {
+    selectedIndex = index;
+    notifyListeners();
+  }
+
   int? menuIndex = 0;
   List<HeaderModel> menuItems = <HeaderModel>[
     HeaderModel(
@@ -97,9 +113,9 @@ class DashboardProvider extends ChangeNotifier {
   //   });
   // }
 
-  int viewedCount = 0;
-  changeViewedCount(int count) {
-    viewedCount = count;
+  UserDetailsModel userDetailsModel = UserDetailsModel.isEmpty();
+  changeDetails(UserDetailsModel detailsModel) {
+    userDetailsModel = detailsModel;
     notifyListeners();
   }
 }

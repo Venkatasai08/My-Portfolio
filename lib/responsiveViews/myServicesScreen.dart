@@ -57,17 +57,25 @@ class _MyServicesScreenState extends State<MyServicesScreen> {
       );
     }
 
-    Widget toggleButtons() {
+    Widget toggleButtons({bool isMobile = false}) {
       return Padding(
         padding: const EdgeInsets.only(top: 30, bottom: 20),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ServiceToggleButtonWidget(
-              iconData: Icons.arrow_back,
-              onTap: () {
-                servicesProvider.leftClicked();
-              },
+            SlideInLeft(
+              child: ServiceToggleButtonWidget(
+                iconData: Icons.arrow_back,
+                onTap: () {
+                  servicesProvider.leftClicked();
+                  if (!isMobile) {
+                    servicesProvider.servicesListController.animateToPage(
+                        servicesProvider.selectedService,
+                        duration: Durations.medium1,
+                        curve: Curves.bounceIn);
+                  }
+                },
+              ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -82,11 +90,19 @@ class _MyServicesScreenState extends State<MyServicesScreen> {
                 );
               }),
             ),
-            ServiceToggleButtonWidget(
-              iconData: Icons.arrow_forward,
-              onTap: () {
-                servicesProvider.rightClicked();
-              },
+            SlideInRight(
+              child: ServiceToggleButtonWidget(
+                iconData: Icons.arrow_forward,
+                onTap: () {
+                  servicesProvider.rightClicked();
+                  if (!isMobile) {
+                    servicesProvider.servicesListController.animateToPage(
+                        servicesProvider.selectedService,
+                        duration: Durations.medium1,
+                        curve: Curves.bounceIn);
+                  }
+                },
+              ),
             )
           ],
         ),
@@ -102,6 +118,13 @@ class _MyServicesScreenState extends State<MyServicesScreen> {
           const SizedBox(
             height: 10,
           ),
+          const Text(
+            "In",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
           const WorkedCompanyLogos()
         ],
       ),
@@ -112,10 +135,17 @@ class _MyServicesScreenState extends State<MyServicesScreen> {
           ),
           buildMyServicesScreenText(),
           const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 25, vertical: 15),
-            child: ServiceCardWidget(),
+            padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+            child: ServiceCardWidgetForMobile(),
           ),
-          toggleButtons(),
+          toggleButtons(isMobile: true),
+          const SizedBox(
+            height: 10,
+          ),
+          const Text(
+            "In",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
           const SizedBox(
             height: 10,
           ),
@@ -130,11 +160,18 @@ class _MyServicesScreenState extends State<MyServicesScreen> {
           const SizedBox(
             height: 10,
           ),
+          const Text(
+            "In",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
           const WorkedCompanyLogos()
         ],
       ),
       bgColor: AppColors.bgColor,
-      paddingWidth: size.width * 0.04,
+      paddingWidth: 5,
     );
   }
 }

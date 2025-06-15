@@ -1,5 +1,8 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:portfolio/provider/dashboardProvider.dart';
+import 'package:provider/provider.dart';
 
 import '../globals/app_assets.dart';
 
@@ -11,7 +14,7 @@ class ProfileAnimation extends StatefulWidget {
 }
 
 class _ProfileAnimationState extends State<ProfileAnimation>
-    with TickerProviderStateMixin {
+    with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late Animation<Offset> _animation;
 
@@ -28,39 +31,52 @@ class _ProfileAnimationState extends State<ProfileAnimation>
 
   @override
   void dispose() {
-    super.dispose();
     _controller.dispose();
+
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return SlideTransition(
-      position: _animation,
-      child: Column(
-        children: [
-          Text(
-            "With a peaceful mind....            ",
-            style:
-                GoogleFonts.calligraffitti(color: Colors.white, fontSize: 20),
-          ),
-          Text(
-            "           ...The perfect developer ",
-            style:
-                GoogleFonts.calligraffitti(color: Colors.white, fontSize: 20),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(15),
-            child: Image.asset(
-              AppAssets.meTemple,
-              width: 340,
-              height: 420,
-              fit: BoxFit.cover,
+    return SlideInRight(
+      child: SlideTransition(
+        position: _animation,
+        child: Column(
+          children: [
+            Text(
+              "With a peaceful mind....            ",
+              style:
+                  GoogleFonts.calligraffitti(color: Colors.white, fontSize: 20),
             ),
-          ),
-        ],
+            Text(
+              "           ...The perfect developer ",
+              style:
+                  GoogleFonts.calligraffitti(color: Colors.white, fontSize: 20),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(15),
+              child: Consumer<DashboardProvider>(builder: (context, val, ch) {
+                if (val.userDetailsModel.profilePic.isNotEmpty) {
+                  return Image.network(
+                    val.userDetailsModel.profilePic,
+                    width: 340,
+                    height: 420,
+                    fit: BoxFit.cover,
+                  );
+                }
+                return Image.asset(
+                  AppAssets.meTemple,
+                  width: 340,
+                  height: 420,
+                  fit: BoxFit.cover,
+                );
+              }),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -1,4 +1,6 @@
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:portfolio/models/browserDataModel.dart';
 
 class Utils {
@@ -32,7 +34,41 @@ class Utils {
     return convertedStringNumber;
   }
 
-  static int mobileMaxWidth = 768;
-  static const String SUPA_BASE_API_KEY = "";
-  static const String SUPA_BASE_API_URL = "";
+  static int mobileMaxWidth = 765;
+
+  static copy(
+      {required String textToCopy,
+      String messageAfterCopy = "Link copied"}) async {
+    await Clipboard.setData(ClipboardData(text: textToCopy));
+    Fluttertoast.showToast(msg: messageAfterCopy);
+  }
+
+  List<String> monthsList = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+  ];
+  static List<String> monthsShortList = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec"
+  ];
 }
